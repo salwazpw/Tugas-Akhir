@@ -19,4 +19,10 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Route::get('tender', [App\Http\Controllers\TenderController::class, 'index'])->name('tender.index');
+// route group tender
+Route::prefix('tender')->name('tender.')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\TenderController::class, 'index'])->name('index');    
+});
