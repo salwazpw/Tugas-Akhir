@@ -18,7 +18,7 @@
                 {{-- <div class="card-header"></div> --}}
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-sm-2">Resume</div>
+                        <div class="col-sm-2">Resumenya Salwa</div>
                         <div class="col-sm-10">Graphs</div>
                     </div>
                 </div>
