@@ -43,7 +43,7 @@ class VendorController extends Controller
         try {
 
             $id_generator = DB::table('id_generators')->where('remark', '=', 'vendor')->first();
-            $number = sprintf("%'.0" . $id_generator->length . "d", $id_generator->index + 1);
+            $number = sprintf("%'.0" . $id_generator->length . "d", $id_generator->index);
 
             $vendor_id = $id_generator->prefix . $number;
             $vendor_name = $request->input('vendor_name');
