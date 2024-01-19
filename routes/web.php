@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,4 +26,11 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 // route group tender
 Route::prefix('tender')->name('tender.')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\TenderController::class, 'index'])->name('index');    
+});
+
+Route::prefix('vendor')->name('vendor.')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\VendorController::class, 'index'])->name('index');   
+    Route::get('/create', [App\Http\Controllers\VendorController::class, 'create'])->name('create'); 
+    Route::post('/store', [App\Http\Controllers\VendorController::class, 'store'])->name('store');
+    Route::delete('/delete/{id}', [App\Http\Controllers\VendorController::class, 'destroy'])->name('destroy');
 });
