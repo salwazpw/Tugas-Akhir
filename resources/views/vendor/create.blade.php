@@ -9,7 +9,7 @@
             <h3 class="card-title">Add Vendor</h3>
           </div>
 
-          <form method="POST" enctype="multipart/form-data" action="{{route('vendor.store')}}">
+          <form method="POST" action="{{route('vendor.store')}}">
             @csrf
             <div class="card-body">
               <div class="form-group">

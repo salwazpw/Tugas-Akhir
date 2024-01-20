@@ -33,5 +33,7 @@ Route::prefix('vendor')->name('vendor.')->middleware('auth')->group(function () 
     Route::get('/', [App\Http\Controllers\VendorController::class, 'index'])->name('index');   
     Route::get('/create', [App\Http\Controllers\VendorController::class, 'create'])->name('create'); 
     Route::post('/store', [App\Http\Controllers\VendorController::class, 'store'])->name('store');
+    Route::get('/edit/{id}', [App\Http\Controllers\VendorController::class, 'edit'])->name('edit'); 
+    Route::post('/update/{id}', [App\Http\Controllers\VendorController::class, 'update'])->name('update');
     Route::delete('/delete/{id}', [App\Http\Controllers\VendorController::class, 'destroy'])->name('destroy');
 });

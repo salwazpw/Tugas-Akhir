@@ -94,9 +94,12 @@ class VendorController extends Controller
      * @param  \App\Models\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function edit(Vendor $vendor)
+    public function edit($id)
     {
-        //
+        $vendor = Vendor::find($id);
+        return view('vendor.edit', [
+            'vendor' => $vendor
+        ]);
     }
 
     /**
@@ -106,9 +109,37 @@ class VendorController extends Controller
      * @param  \App\Models\Vendor  $vendor
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Vendor $vendor)
+    public function update(Request $request, $id)
     {
-        //
+
+        try{
+            $vendor = DB::table('vendors')->where('id', $id)->first();
+
+            $vendor->vendor_name = $request->get('vendor_name');
+            $vendor->vendor_address = $request->get('vendor_address');
+            $vendor->remark = $request->get('remark');
+    
+            $update_vendor = db::table('vendors')->where('id', $id)->update([
+                'vendor_name' => $vendor->vendor_name,
+                'vendor_address' => $vendor->vendor_address,
+                'remark' => $vendor->remark,
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $response = array(
+                'status' => true,
+            );
+
+            return redirect()->route('vendor.index')->with('success', 'Update Vendor successfully.');
+
+        } catch(\Throwable $th) {
+            $response = array(
+                'status' => false,
+                'message' => $th->getMessage(),
+            );
+            return $response;
+        }
+
     }
 
     /**

@@ -67,6 +67,9 @@
                         <td>{{ $data->vendor_address }}</td>
                         <td>
                           <form action="{{ route('vendor.destroy', $data->id) }}" method="POST">
+                            <a href="{{ route('vendor.edit', $data->id) }}" class="btn btn-xs btn-primary btn-flat" data-toggle="tooltip" title='Edit'>
+                              <i class="fa fa-edit"></i>
+                            </a>
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-xs btn-danger btn-flat show_confirm" data-toggle="tooltip" title='Delete'>
