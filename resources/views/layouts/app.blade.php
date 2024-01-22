@@ -15,6 +15,7 @@
             max-width: 100% !important;
         }
     </style>
+    @yield('styles')
 </head>
 
 @guest        
@@ -59,6 +60,24 @@
         <script src="{{ asset('adminlte/dist/js/adminlte.js') }}"></script>
 
         @yield('scripts')
+
+        <script>
+        // sidebar nav_link isOpening when open that page
+        $(document).ready(function() {
+            var url = window.location;
+            console.log(url);
+            // for sidebar menu entirely but not cover treeview
+            $('ul.nav-sidebar a').filter(function() {
+                return this.href == url;
+            }).addClass('active');
+            // for treeview
+            $('ul.nav-treeview a').filter(function() {
+                return this.href == url;
+            }).parentsUntil(".nav-sidebar > .nav-treeview").addClass('menu-open').prev('a').addClass('active');
+        });
+
+
+        </script>
     </body>
 
 </html>

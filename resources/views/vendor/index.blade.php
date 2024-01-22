@@ -21,7 +21,7 @@
 
 @section('content')
 <div class="container">
-  @if(session('success'))
+    @if(session('success'))
         <div id="success-alert" class="alert alert-success">
             {{ session('success') }}
         </div>
@@ -87,7 +87,9 @@
       </div>
 </div>
 
+@endsection
 
+@section('scripts')
 <script>
   setTimeout(function(){
       $('#success-alert').fadeOut('fast');

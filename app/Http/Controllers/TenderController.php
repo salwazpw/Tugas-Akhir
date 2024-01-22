@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tender;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class TenderController extends Controller
 {
@@ -14,8 +16,12 @@ class TenderController extends Controller
      */
     public function index()
     {
+        $tender_lists = DB::table('tenders')
+        ->where('status', '=', 'active')
+        ->get();
+
         return view ('tender.index', [
-            
+            'tender_lists' => $tender_lists,
         ]);
     }
 
@@ -26,7 +32,16 @@ class TenderController extends Controller
      */
     public function create()
     {
-        //
+        // get id generator for default tender_name
+        $id_generator = DB::table('id_generators')->where('remark', '=', 'tender')->first();
+        $default_new_id = $id_generator->prefix . sprintf("%'.0" . $id_generator->length . "d", $id_generator->index);
+
+        $vendor_lists = DB::table('vendors')->get();
+
+        return view ('tender.create', [
+            'default_new_id' => $default_new_id,
+            'vendor_lists' => $vendor_lists
+        ]);
     }
 
     /**
@@ -36,8 +51,98 @@ class TenderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        //
+    {        
+        try {
+            DB::beginTransaction();
+
+            // validator
+            if ($request->input('tender_name') == null) {
+                $response = array(
+                    'status' => false,
+                    'message' => 'Nama Tender tidak boleh kosong.'
+                );
+
+                return Response::json($response);
+            }
+
+            if ($request->input('tender_date') == null) {
+                $response = array(
+                    'status' => false,
+                    'message' => 'Tanggal Tender tidak boleh kosong.'
+                );
+
+                return Response::json($response);
+            }
+
+            if($request->input('vendor_lists') == null) {
+                $response = array(
+                    'status' => false,
+                    'message' => 'Vendor tidak boleh kosong.'
+                );
+
+                return Response::json($response);
+            }
+
+            $id_generator = DB::table('id_generators')->where('remark', '=', 'tender')->first();
+            $tender_id = $id_generator->prefix . sprintf("%'.0" . $id_generator->length . "d", $id_generator->index);
+            $tender_name = $request->input('tender_name');        
+            
+            // tender_date 
+            $tender_date = $request->input('tender_date');            
+            $tender_date = date('Y-m-d', strtotime($tender_date));
+
+            $insert_tender = db::table('tenders')->insert([
+                'tender_id' => $tender_id,
+                'tender_name' => $tender_name,
+                'tender_date' => $tender_date,
+                'status' => 'active',
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+
+            $vendor_lists = $request->input('vendor_lists');
+
+            $test = array();
+            foreach ($vendor_lists as $vendor_list) {
+                $test[] = $vendor_list;
+            }            
+
+            foreach ($vendor_lists as $vendor_id) {
+                $insert_tender_details = db::table('tender_details')->insert([
+                    'tender_id' => $tender_id,
+                    'vendor_id' => $vendor_id,
+                    'score' => 0,
+                    'date' => $tender_date,
+                    'status' => 'active',
+                    'remark' => null,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]);
+            }
+
+            DB::table('id_generators')
+                ->where('remark', '=', 'tender')
+                ->update(['index' => $id_generator->index + 1]);
+            
+            DB::commit();
+
+            $response = array(
+                'status' => true,
+                'message' => 'Tender berhasil dibuat.',                
+            );
+
+            return Response::json($response);
+
+        } catch (\Throwable $e) {
+            DB::rollback();
+            
+            $response = array(
+                'status' => false,
+                'message' => 'Tender gagal dibuat.',                
+            );
+
+            return Response::json($response);
+        }
     }
 
     /**
