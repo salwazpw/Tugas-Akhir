@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Response;
 
 class VendorController extends Controller
 {
@@ -28,10 +29,8 @@ class VendorController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {        
-        return view('vendor.create', [
-            
-        ]);
+    {
+        return view('vendor.create', []);
     }
 
     /**
@@ -44,6 +43,24 @@ class VendorController extends Controller
     {
         try {
 
+            if ($request->input('vendor_name') == null) {
+                $response = array(
+                    'status' => false,
+                    'message' => 'Nama Vendor tidak boleh kosong.'
+                );
+
+                return Response::json($response);
+            }
+
+            if ($request->input('vendor_address') == null) {
+                $response = array(
+                    'status' => false,
+                    'message' => 'Alamat Vendor tidak boleh kosong.'
+                );
+
+                return Response::json($response);
+            }
+
             $id_generator = DB::table('id_generators')->where('remark', '=', 'vendor')->first();
             $number = sprintf("%'.0" . $id_generator->length . "d", $id_generator->index);
 
@@ -52,9 +69,6 @@ class VendorController extends Controller
             $vendor_address = $request->input('vendor_address');
             $remark = $request->input('remark');
 
-            DB::table('id_generators')
-                ->where('remark', '=', 'vendor')
-                ->update(['index' => $id_generator->index + 1]);
 
             $insert_vendor = db::table('vendors')->insert([
                 'vendor_id' => $vendor_id,
@@ -65,17 +79,25 @@ class VendorController extends Controller
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
 
+            DB::table('id_generators')
+                ->where('remark', '=', 'vendor')
+                ->update(['index' => $id_generator->index + 1]);
+
             $response = array(
                 'status' => true,
+                'message' => 'Vendor berhasil dibuat.',
             );
 
-            return redirect()->route('vendor.index')->with('success', 'Add Vendor successfully.');
-        } catch (\Throwable $th) {
+            return Response::json($response);
+
+        } catch (\Throwable $e) {
             $response = array(
+
                 'status' => false,
-                'message' => $th->getMessage(),
+                'message' => 'Vendor gagal dibuat.',
             );
-            return $response;
+
+            return Response::json($response);
         }
     }
 
@@ -114,13 +136,13 @@ class VendorController extends Controller
     public function update(Request $request, $id)
     {
 
-        try{
+        try {
             $vendor = DB::table('vendors')->where('id', $id)->first();
 
             $vendor->vendor_name = $request->get('vendor_name');
             $vendor->vendor_address = $request->get('vendor_address');
             $vendor->remark = $request->get('remark');
-    
+
             $update_vendor = db::table('vendors')->where('id', $id)->update([
                 'vendor_name' => $vendor->vendor_name,
                 'vendor_address' => $vendor->vendor_address,
@@ -130,18 +152,19 @@ class VendorController extends Controller
 
             $response = array(
                 'status' => true,
+                'message' => 'Vendor berhasil diubah.',
             );
 
-            return redirect()->route('vendor.index')->with('success', 'Update Vendor successfully.');
+            return Response::json($response);
 
-        } catch(\Throwable $th) {
+        } catch (\Throwable $e) {
+            
             $response = array(
                 'status' => false,
-                'message' => $th->getMessage(),
+                'message' => 'Vendor gagal diubah.',
             );
-            return $response;
+            return Response::json($response);
         }
-
     }
 
     /**

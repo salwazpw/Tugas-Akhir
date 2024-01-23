@@ -101,11 +101,7 @@ class TenderController extends Controller
             ]);
 
             $vendor_lists = $request->input('vendor_lists');
-
-            $test = array();
-            foreach ($vendor_lists as $vendor_list) {
-                $test[] = $vendor_list;
-            }            
+         
 
             foreach ($vendor_lists as $vendor_id) {
                 $insert_tender_details = db::table('tender_details')->insert([
