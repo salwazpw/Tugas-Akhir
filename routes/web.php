@@ -26,7 +26,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 // Route::get('tender', [App\Http\Controllers\TenderController::class, 'index'])->name('tender.index');
 // route group tender
 Route::prefix('tender')->name('tender.')->middleware('auth')->group(function () {
-    Route::get('/', [App\Http\Controllers\TenderController::class, 'index'])->name('index');    
+    Route::get('/', [App\Http\Controllers\TenderController::class, 'index'])->name('index');
+    Route::get('/create', [App\Http\Controllers\TenderController::class, 'create'])->name('create');
+    Route::post('/store', [App\Http\Controllers\TenderController::class, 'store'])->name('store');    
 });
 
 Route::prefix('vendor')->name('vendor.')->middleware('auth')->group(function () {
