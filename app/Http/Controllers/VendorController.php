@@ -180,11 +180,12 @@ class VendorController extends Controller
 
             if (!$vendor) {
                 return redirect()->route('vendor.index')->with('error', 'Vendor not found.');
+            } else{
+                $vendor->delete();
+
+                return redirect()->route('vendor.index')->with('success', 'Vendor deleted successfully.');
             }
 
-            $vendor->delete();
-
-            return redirect()->route('vendor.index')->with('success', 'Vendor deleted successfully.');
         } catch (\Throwable $th) {
             return redirect()->route('vendor.index')->with('error', $th->getMessage());
         }
