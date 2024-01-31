@@ -28,7 +28,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index']);
 Route::prefix('tender')->name('tender.')->middleware('auth')->group(function () {
     Route::get('/', [App\Http\Controllers\TenderController::class, 'index'])->name('index');
     Route::get('/create', [App\Http\Controllers\TenderController::class, 'create'])->name('create');
-    Route::post('/store', [App\Http\Controllers\TenderController::class, 'store'])->name('store');    
+    Route::post('/store', [App\Http\Controllers\TenderController::class, 'store'])->name('store'); 
+    Route::get('/edit/{id}', [App\Http\Controllers\TenderController::class, 'edit'])->name('edit');   
+    Route::delete('/delete/{id}', [App\Http\Controllers\TenderController::class, 'destroy'])->name('destroy'); 
 });
 
 Route::prefix('vendor')->name('vendor.')->middleware('auth')->group(function () {
@@ -38,4 +40,13 @@ Route::prefix('vendor')->name('vendor.')->middleware('auth')->group(function () 
     Route::get('/edit/{id}', [App\Http\Controllers\VendorController::class, 'edit'])->name('edit'); 
     Route::post('/update/{id}', [App\Http\Controllers\VendorController::class, 'update'])->name('update');
     Route::delete('/delete/{id}', [App\Http\Controllers\VendorController::class, 'destroy'])->name('destroy');
+});
+
+Route::prefix('criteria')->name('criteria.')->middleware('auth')->group(function () {
+    Route::get('/', [App\Http\Controllers\CriteriaController::class, 'index'])->name('index');
+    Route::get('/create', [App\Http\Controllers\CriteriaController::class, 'create'])->name('create'); 
+    Route::post('/store', [App\Http\Controllers\CriteriaController::class, 'store'])->name('store');
+    Route::get('/edit/{id}', [App\Http\Controllers\CriteriaController::class, 'edit'])->name('edit'); 
+    Route::post('/update/{id}', [App\Http\Controllers\CriteriaController::class, 'update'])->name('update');
+    Route::delete('/delete/{id}', [App\Http\Controllers\CriteriaController::class, 'destroy'])->name('destroy');
 });
