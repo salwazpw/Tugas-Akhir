@@ -55,13 +55,13 @@
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-cogs"></i>
                         <p>
-                            Parameters
+                            Criteria
                             <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="../../index.html" class="nav-link">
+                            <a href="{{ route('criteria.index') }}" class="nav-link">
                                 <i class="fa fa-list nav-icon"></i>
                                 <p>Master Data</p>
                             </a>
